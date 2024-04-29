@@ -1,0 +1,48 @@
+from kivymd.app import MDApp
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.button import MDFloatingActionButton, MDFlatButton
+from kivymd.uix.list import OneLineListItem
+
+
+class TodoListApp(MDApp):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.tasks = []
+
+    def build(self):
+        self.title = 'To-Do List'
+
+        # Layout setup
+        self.layout = MDBoxLayout(orientation='vertical', padding=20, spacing=10)
+        self.task_input = MDTextField(hint_text='Enter task', size_hint=(1, None), height=48)
+        self.add_button = MDFloatingActionButton(icon='plus', size_hint=(None, None), size=(48, 48))
+        self.add_button.bind(on_press=self.add_task)
+
+        self.layout.add_widget(self.task_input)
+        self.layout.add_widget(self.add_button)
+
+        return self.layout
+
+    def add_task(self, instance):
+        task_text = self.task_input.text.strip()
+        if task_text:
+            self.tasks.append(task_text)
+            self.task_input.text = ''
+            self.update_task_list()
+
+    def update_task_list(self):
+        # Clear previous task list
+        self.layout.clear_widgets()
+
+        # Re-create task list
+        self.layout.add_widget(self.task_input)
+        self.layout.add_widget(self.add_button)
+
+        for task in self.tasks:
+            task_item = OneLineListItem(text=task)
+            self.layout.add_widget(task_item)
+
+
+if __name__ == '__main__':
+     TodoListApp().run()
